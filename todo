@@ -1,0 +1,6 @@
+#!/bin/bash
+# A small script to manage a to-do file.
+
+TODO=~/Dropbox/todo.txt
+
+cat $TODO
