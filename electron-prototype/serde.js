@@ -1,4 +1,13 @@
 /**
+ * Functions to serialize and deserialize data from the constrained Markdown
+ * format in which the TO-DO app saves its list.
+ *
+ * Author:  Ian Fisher (iafisher@protonmail.com)
+ * Version: October 2018
+ */
+
+
+/**
  * Convert the data into a Markdown document (as a string).
  */
 function serialize(data) {
