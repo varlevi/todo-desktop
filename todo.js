@@ -171,6 +171,16 @@ function renderItem(text, finished) {
     check.classList.add("fi-check", "check");
     check.addEventListener("click", checkOrUncheckHandler);
 
+    let editButton = document.createElement("span");
+    editButton.classList.add("item-control");
+    editButton.appendChild(document.createTextNode("(edit)"));
+    editButton.addEventListener("click", event => {
+        let parentNode = event.target.parentNode;
+        let oldText = parentNode.childNodes[1].textContent.trim();
+        let newText = window.prompt("Enter the new value", oldText);
+        parentNode.childNodes[1].textContent = " " + newText + " ";
+    });
+
     let deleteButton = document.createElement("span");
     deleteButton.classList.add("item-control");
     deleteButton.appendChild(document.createTextNode("(delete)"));
@@ -181,6 +191,8 @@ function renderItem(text, finished) {
 
     newItem.appendChild(check);
     newItem.appendChild(document.createTextNode(" " + text + " "));
+    newItem.appendChild(editButton);
+    newItem.appendChild(document.createTextNode(" "));
     newItem.appendChild(deleteButton);
 
     return newItem;
