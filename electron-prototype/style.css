@@ -1,0 +1,83 @@
+#container {
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 600px) {
+  #container {
+    width: 480px;
+  }
+}
+
+@media screen and (max-width: 599px) {
+  #container {
+    width: 80%;
+  }
+}
+
+#form-new-section {
+  margin-top: 40px;
+}
+
+.inline-form i.fi-plus {
+  color: #796eff;
+  font-size: 20px;
+  margin-right: 5px;
+  padding: 5px 7px;
+}
+
+.inline-form i.fi-plus:hover {
+  cursor: pointer;
+}
+
+i.check {
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 50%;
+  padding: 3px 7px;
+  margin-right: 5px;
+}
+
+.todo i.check {
+  color: transparent;
+  border-color: darkred;
+}
+
+.todo-done i.check {
+  color: gray;
+  border-color: gray;
+}
+
+.todo-done {
+  color: gray;
+  font-style: italic;
+}
+
+i.check:hover {
+  cursor: pointer;
+}
+
+.section-control {
+  color: gray;
+  font-size: 14px;
+}
+
+.section-control:hover {
+  cursor: pointer;
+}
+
+.section-control-rename {
+  margin-left: 5px;
+}
+
+.item-control {
+  color: gray;
+  font-size: 12px;
+}
+
+.item-control:hover {
+  cursor: pointer;
+}
+
+.bottom-hr {
+  margin-bottom: 50px;
+}
