@@ -16,5 +16,10 @@
   },
   "dependencies": {
     "electron-prompt": "^1.2.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/iafisher/todo-desktop.git"
+  },
+  "private": true
 }
