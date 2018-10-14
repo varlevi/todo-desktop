@@ -12,9 +12,15 @@
  * Version: October 2018
  *
  * TODO: Undo for section deletion
+ * TODO: Fix prompts on Electron (https://www.npmjs.com/package/smalltalk)
  */
 
 'use strict';
+
+let fs = require('fs');
+let serde = require('./serde.js');
+
+let save_file = "/home/iafisher/Dropbox/todo2.txt";
 
 
 function render(data) {
@@ -27,27 +33,45 @@ function render(data) {
 }
 
 
-render([
-    {
-        title: "Thursday",
-        items: [
-            {text: "Read chapter 3 of Sculpting in Time", finished: false},
-            {text: "Finish CS240 midterm", finished: true}
-        ],
-    },
-    {
-        title: "Friday",
-        items: [
-            {text: "LING399 presentation", finished: false},
-            {text: "Submit request for reimbursement", finished: false},
-        ],
-    },
-]);
+function saveState() {
+    let root = document.getElementById("container");
+    let data = [];
+    for (let child of root.children) {
+        if (child.classList.contains("section")) {
+            data.push(serializeSection(child));
+        }
+    }
+    fs.writeFile(save_file, serde.serialize(data), (err) => {
+        if (err) {
+            console.error("Unable to save file");
+        }
+    });
+}
+
+
+function serializeSection(section) {
+    let title = section.children[0].childNodes[0].textContent.trim();
+    let items = [];
+    for (let child of section.children) {
+        if (child.classList.contains("todo") || child.classList.contains("todo-done")) {
+            items.push(serializeItem(child));
+        }
+    }
+    return { title: title, items: items };
+}
+
+
+function serializeItem(item) {
+    let text = item.childNodes[1].textContent.trim();
+    let finished = item.classList.contains("todo-done");
+    return { text: text, finished: finished };
+}
 
 
 function deleteSectionHandler(event) {
     let parentNode = event.target.parentNode.parentNode;
     parentNode.remove();
+    saveState();
 }
 
 
@@ -55,6 +79,7 @@ function renameSectionHandler(event) {
     let parentNode = event.target.parentNode;
     let newName = window.prompt("Enter the section's new name");
     parentNode.childNodes[0].textContent = newName;
+    saveState();
 }
 
 
@@ -65,6 +90,7 @@ function checkOrUncheckHandler(event) {
     } else {
         parentNode.classList.replace("todo-done", "todo");
     }
+    saveState();
 }
 
 
@@ -78,6 +104,7 @@ function addItem(section, text, finished) {
     // TODO: Figure out a better way than hard-coding the child index.
     let lastChild = section.children[section.children.length-2];
     section.insertBefore(renderItem(text, finished), lastChild);
+    saveState();
 }
 
 
@@ -87,25 +114,11 @@ function createSection(title) {
 
     let section = renderSection(title);
     root.insertBefore(section, form);
+
+    saveState();
+
     return section;
 }
-
-
-let createInput = document.getElementById("input-create");
-createInput.addEventListener("keyup", event => {
-    if (event.which === 13) {
-        createSection(event.target.value);
-        event.target.value = "";
-    }
-});
-
-
-let createButton = document.getElementById("btn-create");
-createButton.addEventListener("click", event => {
-    let createInput = document.getElementById("input-create");
-    createSection(createInput.value);
-    createInput.value = "";
-});
 
 
 function renderSection(title) {
@@ -201,3 +214,31 @@ function renderItem(text, finished) {
 
     return newItem;
 }
+
+
+// Bind some event listeners.
+let createInput = document.getElementById("input-create");
+createInput.addEventListener("keyup", event => {
+    if (event.which === 13) {
+        createSection(event.target.value);
+        event.target.value = "";
+    }
+});
+
+
+let createButton = document.getElementById("btn-create");
+createButton.addEventListener("click", event => {
+    let createInput = document.getElementById("input-create");
+    createSection(createInput.value);
+    createInput.value = "";
+});
+
+
+// Load the file and render it.
+fs.readFile(save_file, "utf8", (err, data) => {
+    if (err) {
+        console.error(err);
+    } else {
+        render(serde.deserialize(data));
+    }
+});
