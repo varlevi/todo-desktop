@@ -78,12 +78,6 @@ function addItem(section, text, finished) {
 }
 
 
-function createSectionHandler(event) {
-    let title = document.getElementById("input-create").value;
-    createSection(title);
-}
-
-
 function createSection(title) {
     let form = document.getElementById("form-new-section");
     let root = document.getElementById("container");
@@ -94,9 +88,21 @@ function createSection(title) {
 }
 
 
-// TODO: Also trigger this event on input <ENTER>
+let createInput = document.getElementById("input-create");
+createInput.addEventListener("keyup", event => {
+    if (event.which === 13) {
+        createSection(event.target.value);
+        event.target.value = "";
+    }
+});
+
+
 let createButton = document.getElementById("btn-create");
-createButton.addEventListener("click", createSectionHandler);
+createButton.addEventListener("click", event => {
+    let createInput = document.getElementById("input-create");
+    createSection(createInput.value);
+    createInput.value = "";
+});
 
 
 function renderSection(title) {
@@ -128,10 +134,19 @@ function renderSection(title) {
 
     let addButton = document.createElement("i");
     addButton.classList.add("fi-plus", "add-item");
-    addButton.addEventListener("click", addItemHandler);
+    addButton.addEventListener("click", event => {
+        let parentNode = event.target.parentNode;
+        addItem(parentNode.parentNode, parentNode.children[1].value, false);
+    });
 
     let addInput = document.createElement("input");
     addInput.setAttribute("placeholder", "Add item to section");
+    addInput.addEventListener("keyup", event => {
+        if (event.which === 13) {
+            let parentNode = event.target.parentNode;
+            addItem(parentNode.parentNode, parentNode.children[1].value, false);
+        }
+    });
 
     form.appendChild(addButton);
     form.appendChild(addInput);
