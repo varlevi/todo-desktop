@@ -69,6 +69,15 @@ i.check:hover {
   margin-left: 5px;
 }
 
+.item-control {
+  color: gray;
+  font-size: 12px;
+}
+
+.item-control:hover {
+  cursor: pointer;
+}
+
 .bottom-hr {
   margin-bottom: 50px;
 }

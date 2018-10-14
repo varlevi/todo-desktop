@@ -1,4 +1,4 @@
-// TODO: Allow deletion of items.
+// TODO: Undo for section deletion.
 'use strict';
 
 
@@ -171,8 +171,17 @@ function renderItem(text, finished) {
     check.classList.add("fi-check", "check");
     check.addEventListener("click", checkOrUncheckHandler);
 
+    let deleteButton = document.createElement("span");
+    deleteButton.classList.add("item-control");
+    deleteButton.appendChild(document.createTextNode("(delete)"));
+    deleteButton.addEventListener("click", event => {
+        let parentNode = event.target.parentNode;
+        parentNode.remove();
+    });
+
     newItem.appendChild(check);
-    newItem.appendChild(document.createTextNode(" " + text));
+    newItem.appendChild(document.createTextNode(" " + text + " "));
+    newItem.appendChild(deleteButton);
 
     return newItem;
 }
