@@ -3,24 +3,59 @@
 
 
 function render(data) {
-    // TODO
+    for (let sectionData of data) {
+        let section = createSection(sectionData.title);
+        for (let itemData of sectionData.items) {
+            addItem(section, itemData.text, itemData.finished);
+        }
+    }
 }
 
 
-function deleteSection(event) {
+render([
+    {
+        title: "Thursday",
+        items: [
+            {
+                text: "Read chapter 3 of Sculpting in Time",
+                finished: false,
+            },
+            {
+                text: "Finish CS240 midterm",
+                finished: true,
+            }
+        ],
+    },
+    {
+        title: "Friday",
+        items: [
+            {
+                text: "LING399 presentation",
+                finished: false,
+            },
+            {
+                text: "Submit request for reimbursement",
+                finished: false,
+            },
+        ],
+    },
+]);
+
+
+function deleteSectionHandler(event) {
     let parentNode = event.target.parentNode.parentNode;
     parentNode.remove();
 }
 
 
-function renameSection(event) {
+function renameSectionHandler(event) {
     let parentNode = event.target.parentNode;
-    let newName = window.prompt("Enter the section's new name") + " ";
+    let newName = window.prompt("Enter the section's new name");
     parentNode.childNodes[0].textContent = newName;
 }
 
 
-function checkOrUncheck(event) {
+function checkOrUncheckHandler(event) {
     let parentNode = event.target.parentNode;
     if (parentNode.classList.contains("todo")) {
         parentNode.classList.replace("todo", "todo-done");
@@ -30,51 +65,38 @@ function checkOrUncheck(event) {
 }
 
 
-function addItem(event) {
+function addItemHandler(event) {
     let parentNode = event.target.parentNode;
-    let itemText = parentNode.children[1].value;
-    parentNode.parentNode.insertBefore(renderItem(itemText), parentNode);
+    addItem(parentNode.parentNode, parentNode.children[1].value, false);
 }
 
 
-function createSection(event) {
-    let title = document.getElementById("input-create").value;
-    let section = renderSection(title);
+function addItem(section, text, finished) {
+    // TODO: Figure out a better way than hard-coding the child index.
+    let lastChild = section.children[section.children.length-2];
+    section.insertBefore(renderItem(text, finished), lastChild);
+}
 
+
+function createSectionHandler(event) {
+    let title = document.getElementById("input-create").value;
+    createSection(title);
+}
+
+
+function createSection(title) {
     let form = document.getElementById("form-new-section");
     let root = document.getElementById("container");
+
+    let section = renderSection(title);
     root.insertBefore(section, form);
-}
-
-
-let checks = document.getElementsByClassName("check");
-for (let check of checks) {
-    check.addEventListener("click", checkOrUncheck);
-}
-
-
-let deleteButtons = document.getElementsByClassName("section-control-delete");
-for (let button of deleteButtons) {
-    button.addEventListener("click", deleteSection);
-}
-
-
-let renameButtons = document.getElementsByClassName("section-control-rename");
-for (let button of renameButtons) {
-    button.addEventListener("click", renameSection);
-}
-
-
-// TODO: Also trigger this event on input <ENTER>
-let addButtons = document.getElementsByClassName("add-item");
-for (let button of addButtons) {
-    button.addEventListener("click", addItem);
+    return section;
 }
 
 
 // TODO: Also trigger this event on input <ENTER>
 let createButton = document.getElementById("btn-create");
-createButton.addEventListener("click", createSection);
+createButton.addEventListener("click", createSectionHandler);
 
 
 function renderSection(title) {
@@ -88,13 +110,13 @@ function renderSection(title) {
     renameButton.setAttribute("role", "button");
     renameButton.classList.add("section-control", "section-control-rename");
     renameButton.appendChild(document.createTextNode("(rename)"));
-    renameButton.addEventListener("click", renameSection);
+    renameButton.addEventListener("click", renameSectionHandler);
     
     let deleteButton = document.createElement("span");
     deleteButton.setAttribute("role", "button");
     deleteButton.classList.add("section-control", "section-control-delete");
     deleteButton.appendChild(document.createTextNode("(delete)"));
-    deleteButton.addEventListener("click", deleteSection);
+    deleteButton.addEventListener("click", deleteSectionHandler);
 
     header.appendChild(document.createTextNode(" "));
     header.appendChild(renameButton);
@@ -106,7 +128,7 @@ function renderSection(title) {
 
     let addButton = document.createElement("i");
     addButton.classList.add("fi-plus", "add-item");
-    addButton.addEventListener("click", addItem);
+    addButton.addEventListener("click", addItemHandler);
 
     let addInput = document.createElement("input");
     addInput.setAttribute("placeholder", "Add item to section");
@@ -126,16 +148,16 @@ function renderSection(title) {
 }
 
 
-function renderItem(text) {
+function renderItem(text, finished) {
     let newItem = document.createElement("p");
-    newItem.classList.add("todo");
+    newItem.classList.add(finished ? "todo-done" : "todo");
 
     let check = document.createElement("i");
     check.classList.add("fi-check", "check");
-    check.addEventListener("click", checkOrUncheck);
+    check.addEventListener("click", checkOrUncheckHandler);
 
     newItem.appendChild(check);
-    newItem.appendChild(document.createTextNode(text));
+    newItem.appendChild(document.createTextNode(" " + text));
 
     return newItem;
 }
