@@ -1,3 +1,4 @@
+// TODO: Allow deletion of items.
 'use strict';
 
 
@@ -31,37 +32,14 @@ function checkOrUncheck(event) {
 
 function addItem(event) {
     let parentNode = event.target.parentNode;
-    let newItem = document.createElement("p");
-    newItem.classList.add("todo");
-
     let itemText = parentNode.children[1].value;
-    newItem.innerHTML = `
-        <i class="fi-check check"></i>
-        ${itemText}
-    `;
-
-    parentNode.parentNode.insertBefore(newItem, parentNode);
+    parentNode.parentNode.insertBefore(renderItem(itemText), parentNode);
 }
 
 
 function createSection(event) {
-    let section = document.createElement("div");
-    section.classList.add("section");
-
-    // TODO: Add event listeners to these suckers.
     let title = document.getElementById("input-create").value;
-    section.innerHTML = `
-        <h2>
-          ${title}
-          <span role="button" class="section-control section-control-rename">(rename)</span>
-          <span role="button" class="section-control section-control-delete">(delete)</span>
-        </h2>
-        <hr>
-        <div class="inline-form">
-          <i class="fi-plus add-item"></i>
-          <input placeholder="Add item to section"></input>
-        </div>
-    `;
+    let section = renderSection(title);
 
     let form = document.getElementById("form-new-section");
     let root = document.getElementById("container");
@@ -97,3 +75,67 @@ for (let button of addButtons) {
 // TODO: Also trigger this event on input <ENTER>
 let createButton = document.getElementById("btn-create");
 createButton.addEventListener("click", createSection);
+
+
+function renderSection(title) {
+    let section = document.createElement("div");
+    section.classList.add("section");
+
+    let header = document.createElement("h2");
+    header.appendChild(document.createTextNode(title));
+    
+    let renameButton = document.createElement("span");
+    renameButton.setAttribute("role", "button");
+    renameButton.classList.add("section-control", "section-control-rename");
+    renameButton.appendChild(document.createTextNode("(rename)"));
+    renameButton.addEventListener("click", renameSection);
+    
+    let deleteButton = document.createElement("span");
+    deleteButton.setAttribute("role", "button");
+    deleteButton.classList.add("section-control", "section-control-delete");
+    deleteButton.appendChild(document.createTextNode("(delete)"));
+    deleteButton.addEventListener("click", deleteSection);
+
+    header.appendChild(document.createTextNode(" "));
+    header.appendChild(renameButton);
+    header.appendChild(document.createTextNode(" "));
+    header.appendChild(deleteButton);
+
+    let form = document.createElement("div");
+    form.classList.add("inline-form");
+
+    let addButton = document.createElement("i");
+    addButton.classList.add("fi-plus", "add-item");
+    addButton.addEventListener("click", addItem);
+
+    let addInput = document.createElement("input");
+    addInput.setAttribute("placeholder", "Add item to section");
+
+    form.appendChild(addButton);
+    form.appendChild(addInput);
+
+    section.appendChild(header);
+    section.appendChild(document.createElement("hr"));
+    section.appendChild(form);
+
+    let hrBottom = document.createElement("hr");
+    hrBottom.classList.add("bottom-hr");
+    section.appendChild(hrBottom);
+
+    return section;
+}
+
+
+function renderItem(text) {
+    let newItem = document.createElement("p");
+    newItem.classList.add("todo");
+
+    let check = document.createElement("i");
+    check.classList.add("fi-check", "check");
+    check.addEventListener("click", checkOrUncheck);
+
+    newItem.appendChild(check);
+    newItem.appendChild(document.createTextNode(text));
+
+    return newItem;
+}
