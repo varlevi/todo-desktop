@@ -34,7 +34,7 @@ i.check {
   border-style: solid;
   border-radius: 50%;
   padding: 3px 7px;
-  margin-right: 5px;
+  margin-right: 8px;
 }
 
 .todo i.check {
@@ -59,24 +59,21 @@ i.check:hover {
 .section-control {
   color: gray;
   font-size: 14px;
+  margin-left: 5px;
 }
 
 .section-control:hover {
   cursor: pointer;
 }
 
-.section-control:first-child {
-  margin-left: 5px;
+.section-control-left {
+  margin-left: 15px;
 }
 
 #bottom-hr {
   margin-top: 15px;
 }
 
-h2 {
-  margin-top: 50px;
-}
-
-h2:first-child {
-  margin-top: 20px;
+hr.bottom-hr {
+  margin-bottom: 50px;
 }

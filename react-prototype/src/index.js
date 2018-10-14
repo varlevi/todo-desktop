@@ -22,7 +22,7 @@ function ListSection(props) {
         <div>
           <h2>
             {props.title}
-            <span role="button" className="section-control">(rename)</span>
+            <span role="button" className="section-control section-control-left">(rename)</span>
             <span role="button" className="section-control">(delete)</span>
           </h2>
           <hr />
@@ -31,7 +31,7 @@ function ListSection(props) {
             <i className="fi-plus"></i>
             <input placeholder="Add item to section"></input>
           </div>
-          <hr />
+          <hr className="bottom-hr" />
         </div>
     );
 }
