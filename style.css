@@ -65,18 +65,10 @@ i.check:hover {
   cursor: pointer;
 }
 
-.section-control:first-child {
+.section-control-rename {
   margin-left: 5px;
 }
 
-#bottom-hr {
-  margin-top: 15px;
-}
-
-h2 {
-  margin-top: 50px;
-}
-
-h2:first-child {
-  margin-top: 20px;
+.bottom-hr {
+  margin-bottom: 50px;
 }

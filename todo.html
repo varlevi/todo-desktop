@@ -10,51 +10,57 @@
   </head>
   <body>
     <div id="container">
-      <h2>
-        Thursday
-        <span role="button" class="section-control">(rename)</span>
-        <span role="button" class="section-control">(delete)</span>
-      </h2>
-      <hr>
-      <p class="todo">
-        <i class="fi-check check"></i>
-        Read chapter 3 of Sculpting in Time.
-      </p>
-      <p class="todo-done">
-        <i class="fi-check check"></i>
-        Finish CS240 midterm.
-      </p>
-      <div class="inline-form">
-        <i class="fi-plus"></i>
-        <input placeholder="Add item to section"></input>
-      </div>
-      <hr>
-
-      <h2>
-        Friday
-        <span role="button" class="section-control">(rename)</span>
-        <span role="button" class="section-control">(delete)</span>
-      </h2>
-      <hr>
-      <p class="todo">
-        <i class="fi-check check"></i>
-        LING399 presentation
-      </p>
-      <p class="todo">
-        <i class="fi-check check"></i>
-        Submit request for reimbursement.
-      </p>
-      <div class="inline-form">
-        <i class="fi-plus"></i>
-        <input placeholder="Add item to section"></input>
+      <div class="section">
+        <h2>
+          Thursday
+          <span role="button" class="section-control section-control-rename">(rename)</span>
+          <span role="button" class="section-control section-control-delete">(delete)</span>
+        </h2>
+        <hr>
+        <p class="todo">
+          <i class="fi-check check"></i>
+          Read chapter 3 of Sculpting in Time.
+        </p>
+        <p class="todo-done">
+          <i class="fi-check check"></i>
+          Finish CS240 midterm.
+        </p>
+        <div class="inline-form">
+          <i class="fi-plus add-item"></i>
+          <input placeholder="Add item to section"></input>
+        </div>
+        <hr class="bottom-hr">
       </div>
 
-      <hr id="bottom-hr">
+      <div class="section">
+        <h2>
+          Friday
+          <span role="button" class="section-control section-control-rename">(rename)</span>
+          <span role="button" class="section-control section-control-delete">(delete)</span>
+        </h2>
+        <hr>
+        <p class="todo">
+          <i class="fi-check check"></i>
+          LING399 presentation
+        </p>
+        <p class="todo">
+          <i class="fi-check check"></i>
+          Submit request for reimbursement.
+        </p>
+        <div class="inline-form">
+          <i class="fi-plus add-item"></i>
+          <input placeholder="Add item to section"></input>
+        </div>
+
+        <hr class="bottom-hr">
+      </div>
 
       <div class="inline-form" id="form-new-section">
-        <i class="fi-plus"></i>
-        <input placeholder="Create new section"></input>
+        <i id="btn-create" class="fi-plus"></i>
+        <input id="input-create" placeholder="Create new section"></input>
       </div>
     </div>
+
+    <script src="todo.js"></script>
   </body>
 </html>
