@@ -12,15 +12,15 @@
  * Version: October 2018
  *
  * TODO: Undo for section deletion
- * TODO: Fix prompts on Electron (https://www.npmjs.com/package/smalltalk)
  */
 
-'use strict';
+"use strict";
 
-let fs = require('fs');
-let serde = require('./serde.js');
+const fs = require("fs");
+const prompt = require("electron-prompt");
+const serde = require("./serde.js");
 
-let save_file = "/home/iafisher/Dropbox/todo2.txt";
+const save_file = "/home/iafisher/Dropbox/todo2.txt";
 
 
 function render(data) {
@@ -77,9 +77,16 @@ function deleteSectionHandler(event) {
 
 function renameSectionHandler(event) {
     let parentNode = event.target.parentNode;
-    let newName = window.prompt("Enter the section's new name");
-    parentNode.childNodes[0].textContent = newName;
-    saveState();
+    prompt({
+        title: "Rename section",
+        label: "Enter the section's new name:",
+        value: parentNode.childNodes[0].textContent,
+    }).then((value) => {
+        if (value !== null) {
+            parentNode.childNodes[0].textContent = value;
+            saveState();
+        }
+    });
 }
 
 
@@ -194,8 +201,16 @@ function renderItem(text, finished) {
     editButton.addEventListener("click", event => {
         let parentNode = event.target.parentNode;
         let oldText = parentNode.childNodes[1].textContent.trim();
-        let newText = window.prompt("Enter the new value", oldText);
-        parentNode.childNodes[1].textContent = " " + newText + " ";
+        prompt({
+            title: "Edit list item",
+            label: "Enter the new value:",
+            value: oldText,
+        }).then((value) => {
+            if (value !== null) {
+                parentNode.childNodes[1].textContent = " " + value + " ";
+                saveState();
+            }
+        });
     });
 
     let deleteButton = document.createElement("span");
