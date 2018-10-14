@@ -145,6 +145,7 @@ function renderSection(title) {
         if (event.which === 13) {
             let parentNode = event.target.parentNode;
             addItem(parentNode.parentNode, parentNode.children[1].value, false);
+            parentNode.children[1].value = "";
         }
     });
 
