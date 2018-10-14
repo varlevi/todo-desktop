@@ -5,12 +5,14 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Ian Fisher",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^3.0.4"
+    "electron": "^3.0.4",
+    "mocha": "^5.2.0",
+    "spectron": "^4.0.0"
   },
   "dependencies": {
     "electron-prompt": "^1.2.0"
