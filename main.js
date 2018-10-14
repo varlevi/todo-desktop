@@ -15,8 +15,6 @@ function createWindow() {
     win = new BrowserWindow({ width: 650, height: 800 });
     win.loadFile("index.html");
 
-    win.webContents.openDevTools();
-
     win.on("closed", () => {
         win = null;
     });

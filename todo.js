@@ -20,7 +20,42 @@ const fs = require("fs");
 const prompt = require("electron-prompt");
 const serde = require("./serde.js");
 
-const save_file = "/home/iafisher/Dropbox/todo2.txt";
+
+let save_file;
+if (process.env.TODO_PATH !== undefined) {
+    save_file = process.env.TODO_PATH;
+    loadAndRender();
+} else {
+    renderError(
+        "Please set the TODO_PATH environment variable to the location of " +
+        "the file in which to store your to-do list."
+    );
+}
+
+
+function loadAndRender() {
+    fs.readFile(save_file, "utf8", (err, data) => {
+        if (err) {
+            console.error(err);
+            renderError("Unable to read from file " + save_file);
+        } else {
+            render(serde.deserialize(data));
+        }
+    });
+}
+
+
+function renderError(msg) {
+    let root = document.getElementById("container");
+    while (root.hasChildNodes()) {
+        root.removeChild(root.lastChild);
+    }
+    
+    let p = document.createElement("p");
+    p.appendChild(document.createTextNode(msg));
+
+    root.appendChild(p);
+}
 
 
 function render(data) {
@@ -249,11 +284,3 @@ createButton.addEventListener("click", event => {
 });
 
 
-// Load the file and render it.
-fs.readFile(save_file, "utf8", (err, data) => {
-    if (err) {
-        console.error(err);
-    } else {
-        render(serde.deserialize(data));
-    }
-});

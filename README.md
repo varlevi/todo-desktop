@@ -7,5 +7,6 @@ To run:
 $ git clone https://github.com/iafisher/todo-desktop.git
 $ cd todo-desktop
 $ npm install
+$ export TODO_PATH=~/Dropbox/todo.txt  # or wherever else you want to keep it
 $ npm start
 ```
