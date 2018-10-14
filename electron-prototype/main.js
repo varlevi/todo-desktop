@@ -1,10 +1,18 @@
+/**
+ * The Electron code for the TO-DO app. See `todo.js` for the app's main
+ * functionality.
+ *
+ * Author:  Ian Fisher (iafisher@protonmail.com)
+ * Version: October 2018
+ */
+
 const { app, BrowserWindow } = require("electron");
 
 // Global reference to window object.
 let win;
 
 function createWindow() {
-    win = new BrowserWindow({ width: 800, height: 600 });
+    win = new BrowserWindow({ width: 650, height: 800 });
     win.loadFile("index.html");
 
     win.webContents.openDevTools();

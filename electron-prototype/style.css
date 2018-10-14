@@ -52,6 +52,10 @@ i.check {
   font-style: italic;
 }
 
+.todo, .todo-done {
+  line-height: 1.5;
+}
+
 i.check:hover {
   cursor: pointer;
 }
