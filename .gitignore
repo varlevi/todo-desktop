@@ -1,3 +1,5 @@
 *.swp
 /foundation-icons/svgs/*.svg
 /react-prototype/node_modules
+
+/plan.txt
