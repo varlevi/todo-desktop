@@ -1,4 +1,19 @@
-// TODO: Undo for section deletion.
+/**
+ * The JavaScript code for the TO-DO app. It handles the following operations:
+ *
+ *   - Rendering the UI from a JSON list.
+ *   - Renaming and deleting sections.
+ *   - Editing and deleting items.
+ *   - Adding new items.
+ *   - Creating new sections.
+ *
+ *
+ * Author:  Ian Fisher (iafisher@protonmail.com)
+ * Version: October 2018
+ *
+ * TODO: Undo for section deletion
+ */
+
 'use strict';
 
 
@@ -16,27 +31,15 @@ render([
     {
         title: "Thursday",
         items: [
-            {
-                text: "Read chapter 3 of Sculpting in Time",
-                finished: false,
-            },
-            {
-                text: "Finish CS240 midterm",
-                finished: true,
-            }
+            {text: "Read chapter 3 of Sculpting in Time", finished: false},
+            {text: "Finish CS240 midterm", finished: true}
         ],
     },
     {
         title: "Friday",
         items: [
-            {
-                text: "LING399 presentation",
-                finished: false,
-            },
-            {
-                text: "Submit request for reimbursement",
-                finished: false,
-            },
+            {text: "LING399 presentation", finished: false},
+            {text: "Submit request for reimbursement", finished: false},
         ],
     },
 ]);
