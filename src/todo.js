@@ -18,7 +18,7 @@
 
 const fs = require("fs");
 const prompt = require("electron-prompt");
-const serde = require("./serde.js");
+const serde = require("./src/serde.js");
 
 
 let save_file;

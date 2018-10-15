@@ -1,5 +1,5 @@
 const assert = require("assert");
-const serde = require("../serde.js");
+const serde = require("../src/serde.js");
 
 
 describe("serialize", function () {
