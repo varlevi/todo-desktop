@@ -1,3 +1,5 @@
+// TODO: http://www.matthiassommer.it/programming/desktop/integration-e2e-test-electron-mocha-spectron-chai/
+
 const Application = require("spectron").Application;
 const assert = require("assert");
 const electronPath = require("electron");
