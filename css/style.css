@@ -85,3 +85,7 @@ i.check:hover {
 .bottom-hr {
   margin-bottom: 50px;
 }
+
+input {
+  padding: 3px;
+}
