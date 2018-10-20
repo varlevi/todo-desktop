@@ -1,6 +1,6 @@
 A barebones to-do app for Linux. Stores your to-do items in a single,
-human-readable text file. Sync with your phone by putting the file in Dropbox
-(or the cloud service of your choice). Works with the [Android app]
+human-readable text file. Syncing across all your devices is as easy as putting
+the file in Dropbox. Works with the [Android app]
 (under development).
 
 To run:
