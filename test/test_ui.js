@@ -6,7 +6,8 @@ const electronPath = require("electron");
 const path = require("path");
 
 
-describe("Application launch", function () {
+describe("Electron UI", function () {
+    process.env.TODO_PATH = path.join(__dirname, "assets", "todo.txt");
     this.timeout(10000);
 
     beforeEach(function () {
@@ -23,7 +24,7 @@ describe("Application launch", function () {
         }
     });
 
-    it("shows an initial window", function () {
+    it("opens a window initially", function () {
         return this.app.client.getWindowCount().then(function (count) {
             assert.equal(count, 1);
         });
