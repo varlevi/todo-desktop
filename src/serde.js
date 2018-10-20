@@ -47,19 +47,8 @@ function deserialize(markdown) {
             currentSection = line.slice(3, -3).trim();
             currentItems = [];
         } else if (line.startsWith("-")) {
-            line = line.slice(1).trim();
-            if (line.startsWith("[x]")) {
-                currentItems.push({
-                    text: line.slice(3).trim(), finished: true
-                });
-            } else if (line.startsWith("[ ]")) {
-                currentItems.push({
-                    text: line.slice(3).trim(), finished: false
-                });
-            } else {
-                // Handle a missing "[ ]" gracefully.
-                currentItems.push({ text: line.trim(), finished: false } );
-            }
+            line = line.slice(1);
+            currentItems.push(deserializeLine(line));
         }
     }
     if (currentSection !== null || currentItems.length > 0) {
@@ -71,6 +60,24 @@ function deserialize(markdown) {
     }
     return data;
 }
+
+
+/**
+ * Deserialize a single line into a { text: ..., finished: ... } object. The
+ * line should not include the leading dash.
+ */
+function deserializeLine(line) {
+    line = line.trim();
+    if (line.startsWith("[x]")) {
+        return { text: line.slice(3).trim(), finished: true };
+    } else if (line.startsWith("[ ]")) {
+        return { text: line.slice(3).trim(), finished: false };
+    } else {
+        // Handle a missing "[ ]" gracefully.
+        return { text: line.trim(), finished: false };
+    }
+}
+
 
 exports.serialize = serialize;
 exports.deserialize = deserialize;
