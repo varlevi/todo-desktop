@@ -26,7 +26,7 @@ describe("serialize", function () {
         ];
         assert.strictEqual(
             serde.serialize(data),
-            "=== Monday ===\n- Study for CS exam\n- ~Philosophy paper~\n\n"
+            "=== Monday ===\n- [ ] Study for CS exam\n- [x] Philosophy paper\n\n"
         );
     });
 
@@ -49,8 +49,8 @@ describe("serialize", function () {
         ];
         assert.strictEqual(
             serde.serialize(data),
-            "=== Work ===\n- Submit reimbursement form\n- ~Prep for 1:1~\n\n" +
-            "=== Home ===\n- ~Buy milk~\n- ~Fix lawnmower~\n\n"
+            "=== Work ===\n- [ ] Submit reimbursement form\n- [x] Prep for 1:1\n\n" +
+            "=== Home ===\n- [x] Buy milk\n- [x] Fix lawnmower\n\n"
         );
     });
 
@@ -77,8 +77,8 @@ describe("serialize", function () {
         ];
         assert.strictEqual(
             serde.serialize(data),
-            "=== Work ===\n- Submit reimbursement form\n- ~Prep for 1:1~\n\n" +
-            "=== School ===\n\n=== Home ===\n- ~Buy milk~\n- ~Fix lawnmower~\n\n"
+            "=== Work ===\n- [ ] Submit reimbursement form\n- [x] Prep for 1:1\n\n" +
+            "=== School ===\n\n=== Home ===\n- [x] Buy milk\n- [x] Fix lawnmower\n\n"
         );
     });
 });
@@ -98,7 +98,7 @@ describe("deserialize", function () {
 
     it("should handle one section with one unfinished item", function () {
         assert.deepStrictEqual(
-            serde.deserialize("=== Work ===\n- Finish code review\n\n"),
+            serde.deserialize("=== Work ===\n- [ ] Finish code review\n\n"),
             [
                 {
                     title: "Work",
@@ -110,7 +110,7 @@ describe("deserialize", function () {
 
     it("should handle one section with one finished item", function () {
         assert.deepStrictEqual(
-            serde.deserialize("=== Work ===\n- ~Finish code review~\n\n"),
+            serde.deserialize("=== Work ===\n- [x] Finish code review\n\n"),
             [
                 {
                     title: "Work",
@@ -123,7 +123,7 @@ describe("deserialize", function () {
     it("should handle one section with multiple items", function () {
         assert.deepStrictEqual(
             serde.deserialize(
-                "=== Work ===\n- ~Finish code review~\n- Polish slides\n\n"
+                "=== Work ===\n- [x] Finish code review\n- [ ] Polish slides\n\n"
             ),
             [
                 {
@@ -140,8 +140,8 @@ describe("deserialize", function () {
     it("should handle multiple sections, all with items", function () {
         assert.deepStrictEqual(
             serde.deserialize(
-                "=== Work ===\n- Submit form\n- ~Prep for 1:1~\n\n" +
-                "=== Home ===\n- ~Buy milk~\n- ~Fix lawnmower~\n\n"
+                "=== Work ===\n- [ ] Submit form\n- [x] Prep for 1:1\n\n" +
+                "=== Home ===\n- [x] Buy milk\n- [x] Fix lawnmower\n\n"
             ),
             [
                 {
@@ -165,9 +165,9 @@ describe("deserialize", function () {
     it("should handle multiple sections, some empty", function () {
         assert.deepStrictEqual(
             serde.deserialize(
-                "=== Work ===\n- Submit form\n- ~Prep for 1:1~\n\n" +
-                "=== School ===\n\n=== Home ===\n- ~Buy milk~\n" +
-                "- ~Fix lawnmower~\n\n"
+                "=== Work ===\n- [ ] Submit form\n- [x] Prep for 1:1\n\n" +
+                "=== School ===\n\n=== Home ===\n- [x] Buy milk\n" +
+                "- [x] Fix lawnmower\n\n"
             ),
             [
                 {

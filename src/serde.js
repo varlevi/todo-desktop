@@ -16,9 +16,9 @@ function serialize(data) {
         doc += "=== " + section.title.trim() + " ===\n";
         for (let item of section.items) {
             if (item.finished) {
-                doc += "- ~" + item.text.trim() + "~\n";
+                doc += "- [x] " + item.text.trim() + "\n";
             } else {
-                doc += "- " + item.text.trim() + "\n";
+                doc += "- [ ] " + item.text.trim() + "\n";
             }
         }
         doc += "\n";
@@ -48,12 +48,17 @@ function deserialize(markdown) {
             currentItems = [];
         } else if (line.startsWith("-")) {
             line = line.slice(1).trim();
-            if (line.startsWith("~") && line.endsWith("~")) {
+            if (line.startsWith("[x]")) {
                 currentItems.push({
-                    text: line.slice(1, -1).trim(), finished: true
+                    text: line.slice(3).trim(), finished: true
+                });
+            } else if (line.startsWith("[ ]")) {
+                currentItems.push({
+                    text: line.slice(3).trim(), finished: false
                 });
             } else {
-                currentItems.push({ text: line, finished: false });
+                // Handle a missing "[ ]" gracefully.
+                currentItems.push({ text: line.trim(), finished: false } );
             }
         }
     }
