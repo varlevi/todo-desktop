@@ -17,27 +17,55 @@
 "use strict";
 
 const fs = require("fs");
+const path = require("path");
+
 const prompt = require("electron-prompt");
+const toml = require("toml-js");
+
 const serde = require("./src/serde.js");
 
 
-let save_file;
-if (process.env.TODO_PATH !== undefined) {
-    save_file = process.env.TODO_PATH;
-    loadAndRender();
-} else {
-    renderError(
-        "Please set the TODO_PATH environment variable to the location of " +
-        "the file in which to store your to-do list."
-    );
-}
+// Initialize with fallback value.
+let save_file = "todo.txt";
+
+// Try to load the path of the to-do file from a config file.
+const config_path = path.join(process.env.HOME, ".todo-iafisher");
+fs.readFile(config_path, "utf8", (err, data) => {
+    if (err) {
+        const label = (
+            "Enter the path where you want your to-do list to be saved. " +
+            "Choose a folder synced by Dropbox or some other cloud service " +
+            "in order to access the same list on Android."
+        );
+        prompt({
+            title: "Enter to-do list path",
+            label: label,
+        }).then((value) => {
+            if (value !== null) {
+                save_file = value;
+            }
+
+            const data = toml.dump({ path: save_file });
+            fs.writeFile(config_path, data, (err) => {
+                if (err) {
+                    console.error("Unable to save config file");
+                }
+            });
+
+            loadAndRender();
+        });
+    } else {
+        let parsed = toml.parse(data);
+        save_file = parsed.path;
+        loadAndRender();
+    }
+});
 
 
 function loadAndRender() {
     fs.readFile(save_file, "utf8", (err, data) => {
         if (err) {
-            console.error(err);
-            renderError("Unable to read from file " + save_file);
+            render([]);
         } else {
             render(serde.deserialize(data));
         }

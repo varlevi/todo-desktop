@@ -15,7 +15,8 @@
     "spectron": "^4.0.0"
   },
   "dependencies": {
-    "electron-prompt": "^1.2.0"
+    "electron-prompt": "^1.2.0",
+    "toml-js": "0.0.8"
   },
   "repository": {
     "type": "git",
