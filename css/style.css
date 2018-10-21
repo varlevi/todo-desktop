@@ -1,3 +1,7 @@
+body {
+  padding-bottom: 50px;
+}
+
 #container {
   margin: 0 auto;
 }
@@ -83,7 +87,7 @@ i.check:hover {
 }
 
 .bottom-hr {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 input {

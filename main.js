@@ -12,7 +12,7 @@ const { app, BrowserWindow } = require("electron");
 let win;
 
 function createWindow() {
-    win = new BrowserWindow({ width: 650, height: 800 });
+    win = new BrowserWindow({ width: 650, height: 900 });
     win.loadFile("index.html");
 
     win.on("closed", () => {
