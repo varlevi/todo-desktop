@@ -155,9 +155,7 @@ function checkOrUncheckHandler(event) {
  * Insert a new to-do item into the document.
  */
 function addItem(section, text, finished) {
-    // TODO: Figure out a better way than hard-coding the child index.
-    let lastChild = section.children[section.children.length-1];
-    section.insertBefore(renderItem(text, finished), lastChild);
+    section.appendChild(renderItem(text, finished));
     saveState();
 }
 
@@ -169,10 +167,10 @@ function addItem(section, text, finished) {
 function findSection(date) {
     let root = document.getElementById("container");
 
-    for (let i = 1; i < root.children.length; i++) {
-        let title = root.children[i].children[0].childNodes[0].textContent;
+    for (let section of root.querySelectorAll("div.section")) {
+        let title = section.children[0].childNodes[0].textContent;
         if (getDateFromHeader(title) === date) {
-            return root.children[i];
+            return section;
         }
     }
 
@@ -206,28 +204,30 @@ function getDateFromHeader(header) {
  * Insert a new section into the document.
  */
 function createSection(title) {
-    let form = document.getElementById("form-new-section");
+    let form = document.getElementById("form-new-item");
     let root = document.getElementById("container");
 
-    let section = renderSection(title);
+    let sectionToInsert = renderSection(title);
     let date = getDateFromHeader(title);
     let inserted = false;
-    for (let i = 1; i < root.children.length; i++) {
-        let title = root.children[i].children[0].childNodes[0].textContent;
+    for (let section of root.querySelectorAll("div.section")) {
+        let title = section.children[0].childNodes[0].textContent;
         if (date < getDateFromHeader(title)) {
-            root.insertBefore(section, root.children[i]);
+            root.insertBefore(sectionToInsert, section);
+            root.insertBefore(document.createElement("hr"), section);
             inserted = true;
             break;
         }
     }
 
     if (!inserted) {
-        root.appendChild(section);
+        root.appendChild(sectionToInsert);
+        root.appendChild(document.createElement("hr"));
     }
 
     saveState();
 
-    return section;
+    return sectionToInsert;
 }
 
 
@@ -243,11 +243,6 @@ function renderSection(title) {
     header.appendChild(document.createTextNode(title));
 
     section.appendChild(header);
-    section.appendChild(document.createElement("hr"));
-
-    let hrBottom = document.createElement("hr");
-    hrBottom.classList.add("bottom-hr");
-    section.appendChild(hrBottom);
 
     return section;
 }
@@ -291,8 +286,9 @@ function renderItem(text, finished) {
         parentNode.remove();
 
         // Remove the section as well, if it has no to-do items.
-        // TODO: Count <p>s instead of children.
-        if (section.children.length === 3) {
+        if (section.querySelectorAll("p").length === 0) {
+            // Remove the <hr> after the section.
+            section.nextSibling.remove();
             section.remove();
         }
 
