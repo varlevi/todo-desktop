@@ -391,10 +391,12 @@ function indexToDayOfWeek(index) {
 let addButton = document.getElementById("new-item-btn");
 addButton.addEventListener("click", event => {
     let textInput = document.getElementById("new-item-text");
-    let text = textInput.value;
+    let text = textInput.value.trim();
     let date = document.getElementById("new-item-date").value;
 
-    let section = findSection(date);
-    addItem(section, text, false);
-    textInput.value = "";
+    if (text.length > 0) {
+        let section = findSection(date);
+        addItem(section, text, false);
+        textInput.value = "";
+    }
 });
