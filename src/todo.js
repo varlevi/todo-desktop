@@ -102,6 +102,10 @@ function render(data) {
 
 
 function saveState() {
+    if (process.env.DEBUG) {
+        return;
+    }
+
     let root = document.getElementById("container");
     let data = [];
     for (let child of root.children) {
@@ -174,7 +178,7 @@ function checkOrUncheckHandler(event) {
  */
 function addItem(section, text, finished) {
     // TODO: Figure out a better way than hard-coding the child index.
-    let lastChild = section.children[section.children.length-2];
+    let lastChild = section.children[section.children.length-1];
     section.insertBefore(renderItem(text, finished), lastChild);
     saveState();
 }
@@ -277,12 +281,8 @@ function renderSection(title) {
     header.appendChild(document.createTextNode(" "));
     header.appendChild(deleteButton);
 
-    let form = document.createElement("div");
-    form.classList.add("inline-form");
-
     section.appendChild(header);
     section.appendChild(document.createElement("hr"));
-    section.appendChild(form);
 
     let hrBottom = document.createElement("hr");
     hrBottom.classList.add("bottom-hr");
@@ -326,7 +326,15 @@ function renderItem(text, finished) {
     deleteButton.appendChild(document.createTextNode("(delete)"));
     deleteButton.addEventListener("click", event => {
         let parentNode = event.target.parentNode;
+        let section = parentNode.parentNode;
         parentNode.remove();
+
+        // Remove the section as well, if it has no to-do items.
+        // TODO: Count <p>s instead of children.
+        if (section.children.length === 3) {
+            section.remove();
+        }
+
         saveState();
     });
 
