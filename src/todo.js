@@ -282,6 +282,7 @@ function renderItem(text, finished) {
     deleteButton.addEventListener("click", event => {
         let parentNode = event.target.parentNode;
         parentNode.remove();
+        saveState();
     });
 
     newItem.appendChild(check);
