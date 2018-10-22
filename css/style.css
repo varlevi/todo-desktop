@@ -27,17 +27,6 @@ body {
   text-align: center;
 }
 
-.inline-form i.fi-plus {
-  color: #796eff;
-  font-size: 20px;
-  margin-right: 5px;
-  padding: 5px 7px;
-}
-
-.inline-form i.fi-plus:hover {
-  cursor: pointer;
-}
-
 i.check {
   border-width: 2px;
   border-style: solid;
@@ -67,19 +56,6 @@ i.check {
 
 i.check:hover {
   cursor: pointer;
-}
-
-.section-control {
-  color: gray;
-  font-size: 14px;
-}
-
-.section-control:hover {
-  cursor: pointer;
-}
-
-.section-control-rename {
-  margin-left: 5px;
 }
 
 .item-control {

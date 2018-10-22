@@ -140,28 +140,6 @@ function serializeItem(item) {
 }
 
 
-function deleteSectionHandler(event) {
-    let parentNode = event.target.parentNode.parentNode;
-    parentNode.remove();
-    saveState();
-}
-
-
-function renameSectionHandler(event) {
-    let parentNode = event.target.parentNode;
-    prompt({
-        title: "Rename section",
-        label: "Enter the section's new name:",
-        value: parentNode.childNodes[0].textContent,
-    }).then((value) => {
-        if (value !== null) {
-            parentNode.childNodes[0].textContent = value;
-            saveState();
-        }
-    });
-}
-
-
 function checkOrUncheckHandler(event) {
     let parentNode = event.target.parentNode;
     if (parentNode.classList.contains("todo")) {
@@ -263,23 +241,6 @@ function renderSection(title) {
 
     let header = document.createElement("h2");
     header.appendChild(document.createTextNode(title));
-    
-    let renameButton = document.createElement("span");
-    renameButton.setAttribute("role", "button");
-    renameButton.classList.add("section-control", "section-control-rename");
-    renameButton.appendChild(document.createTextNode("(rename)"));
-    renameButton.addEventListener("click", renameSectionHandler);
-    
-    let deleteButton = document.createElement("span");
-    deleteButton.setAttribute("role", "button");
-    deleteButton.classList.add("section-control", "section-control-delete");
-    deleteButton.appendChild(document.createTextNode("(delete)"));
-    deleteButton.addEventListener("click", deleteSectionHandler);
-
-    header.appendChild(document.createTextNode(" "));
-    header.appendChild(renameButton);
-    header.appendChild(document.createTextNode(" "));
-    header.appendChild(deleteButton);
 
     section.appendChild(header);
     section.appendChild(document.createElement("hr"));
