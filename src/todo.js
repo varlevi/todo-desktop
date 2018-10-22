@@ -25,6 +25,9 @@ const toml = require("toml-js");
 const serde = require("./src/serde.js");
 
 
+setDatePickerDefault();
+
+
 // Initialize with fallback value.
 let save_file = "todo.txt";
 
@@ -88,9 +91,11 @@ function renderError(msg) {
 
 function render(data) {
     for (let sectionData of data) {
-        let section = createSection(sectionData.title);
-        for (let itemData of sectionData.items) {
-            addItem(section, itemData.text, itemData.finished);
+        if (sectionData.items.length > 0) {
+            let section = createSection(sectionData.title);
+            for (let itemData of sectionData.items) {
+                addItem(section, itemData.text, itemData.finished);
+            }
         }
     }
 }
@@ -164,12 +169,9 @@ function checkOrUncheckHandler(event) {
 }
 
 
-function addItemHandler(event) {
-    let parentNode = event.target.parentNode;
-    addItem(parentNode.parentNode, parentNode.children[1].value, false);
-}
-
-
+/**
+ * Insert a new to-do item into the document.
+ */
 function addItem(section, text, finished) {
     // TODO: Figure out a better way than hard-coding the child index.
     let lastChild = section.children[section.children.length-2];
@@ -178,12 +180,51 @@ function addItem(section, text, finished) {
 }
 
 
+/**
+ * Find the section that matches the date. If no section matches, a new section
+ * is created, inserted into the DOM, and returned.
+ */
+function findSection(date) {
+    let root = document.getElementById("container");
+
+    for (let i = 1; i < root.children.length; i++) {
+        let title = root.children[i].children[0].childNodes[0].textContent;
+        if (getDateFromHeader(title) === date) {
+            return root.children[i];
+        }
+    }
+
+    // TODO: Format this date correctly.
+    return createSection(date);
+}
+
+
+/**
+ * From a section header, extract the date.
+ */
+function getDateFromHeader(header) {
+    let fields = header.split(" ");
+    let date = fields[fields.length-1];
+
+    let dateFields = date.split("/");
+    let month = parseInt(dateFields[0]);
+    let day = parseInt(dateFields[1]);
+    // TODO: This might break around the New Year.
+    let year = new Date().getFullYear();
+
+    return year + "-" + padLeft(month) + "-" + padLeft(day);
+}
+
+
+/**
+ * Insert a new section into the document.
+ */
 function createSection(title) {
     let form = document.getElementById("form-new-section");
     let root = document.getElementById("container");
 
     let section = renderSection(title);
-    root.insertBefore(section, form);
+    root.appendChild(section);
 
     saveState();
 
@@ -191,6 +232,10 @@ function createSection(title) {
 }
 
 
+/**
+ * Return a section header as an HTML element (not yet inserted into the
+ * document).
+ */
 function renderSection(title) {
     let section = document.createElement("div");
     section.classList.add("section");
@@ -218,26 +263,6 @@ function renderSection(title) {
     let form = document.createElement("div");
     form.classList.add("inline-form");
 
-    let addButton = document.createElement("i");
-    addButton.classList.add("fi-plus", "add-item");
-    addButton.addEventListener("click", event => {
-        let parentNode = event.target.parentNode;
-        addItem(parentNode.parentNode, parentNode.children[1].value, false);
-    });
-
-    let addInput = document.createElement("input");
-    addInput.setAttribute("placeholder", "Add item to section");
-    addInput.addEventListener("keyup", event => {
-        if (event.which === 13) {
-            let parentNode = event.target.parentNode;
-            addItem(parentNode.parentNode, parentNode.children[1].value, false);
-            parentNode.children[1].value = "";
-        }
-    });
-
-    form.appendChild(addButton);
-    form.appendChild(addInput);
-
     section.appendChild(header);
     section.appendChild(document.createElement("hr"));
     section.appendChild(form);
@@ -250,6 +275,9 @@ function renderSection(title) {
 }
 
 
+/**
+ * Return a to-do item as an HTML element (not yet inserted into the document).
+ */
 function renderItem(text, finished) {
     let newItem = document.createElement("p");
     newItem.classList.add(finished ? "todo-done" : "todo");
@@ -295,19 +323,35 @@ function renderItem(text, finished) {
 }
 
 
-// Bind some event listeners.
-let createInput = document.getElementById("input-create");
-createInput.addEventListener("keyup", event => {
-    if (event.which === 13) {
-        createSection(event.target.value);
-        event.target.value = "";
-    }
-});
+/**
+ * Set the default value for the date picker to be tomorrow.
+ */
+function setDatePickerDefault() {
+    const datePicker = document.getElementById("new-item-date");
+    let tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const yyyy = tomorrow.getFullYear();
+    const mm = tomorrow.getMonth() + 1;
+    const dd = tomorrow.getDate();
+    datePicker.value = yyyy + "-" + padLeft(mm) + "-" + padLeft(dd);
+}
 
 
-let createButton = document.getElementById("btn-create");
-createButton.addEventListener("click", event => {
-    let createInput = document.getElementById("input-create");
-    createSection(createInput.value);
-    createInput.value = "";
+/**
+ * If the given positive integer is less than 10, prepend a '0'.
+ */
+function padLeft(d) {
+    return (d < 10) ? "0" + d : "" + d;
+}
+
+
+let addButton = document.getElementById("new-item-btn");
+addButton.addEventListener("click", event => {
+    let textInput = document.getElementById("new-item-text");
+    let text = textInput.value;
+    let date = document.getElementById("new-item-date").value;
+
+    let section = findSection(date);
+    addItem(section, text, false);
+    textInput.value = "";
 });
