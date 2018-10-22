@@ -92,4 +92,9 @@ i.check:hover {
 
 input {
   padding: 3px;
+  transition: width 300ms linear;
+}
+
+input:focus {
+  width: 75%;
 }

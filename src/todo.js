@@ -310,5 +310,3 @@ createButton.addEventListener("click", event => {
     createSection(createInput.value);
     createInput.value = "";
 });
-
-
