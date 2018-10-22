@@ -228,7 +228,20 @@ function createSection(title) {
     let root = document.getElementById("container");
 
     let section = renderSection(title);
-    root.appendChild(section);
+    let date = getDateFromHeader(title);
+    let inserted = false;
+    for (let i = 1; i < root.children.length; i++) {
+        let title = root.children[i].children[0].childNodes[0].textContent;
+        if (date < getDateFromHeader(title)) {
+            root.insertBefore(section, root.children[i]);
+            inserted = true;
+            break;
+        }
+    }
+
+    if (!inserted) {
+        root.appendChild(section);
+    }
 
     saveState();
 
