@@ -194,8 +194,11 @@ function findSection(date) {
         }
     }
 
-    // TODO: Format this date correctly.
-    return createSection(date);
+    let fields = date.split("-");
+    let month = fields[1];
+    let day = fields[2];
+    let dayOfWeek = indexToDayOfWeek(new Date(date).getUTCDay());
+    return createSection(dayOfWeek + ", " + month + "/" + day);
 }
 
 
@@ -210,6 +213,7 @@ function getDateFromHeader(header) {
     let month = parseInt(dateFields[0]);
     let day = parseInt(dateFields[1]);
     // TODO: This might break around the New Year.
+    // TODO: Should I be using getUTCFullYear() instead?
     let year = new Date().getFullYear();
 
     return year + "-" + padLeft(month) + "-" + padLeft(day);
@@ -329,6 +333,7 @@ function renderItem(text, finished) {
 function setDatePickerDefault() {
     const datePicker = document.getElementById("new-item-date");
     let tomorrow = new Date();
+    // TODO: Should I be using getUTC*() instead?
     tomorrow.setDate(tomorrow.getDate() + 1);
     const yyyy = tomorrow.getFullYear();
     const mm = tomorrow.getMonth() + 1;
@@ -342,6 +347,31 @@ function setDatePickerDefault() {
  */
 function padLeft(d) {
     return (d < 10) ? "0" + d : "" + d;
+}
+
+
+/**
+ * Given an index 0-6, return the corresponding day of the week.
+ */
+function indexToDayOfWeek(index) {
+    switch (index) {
+        case 0:
+            return "Sunday";
+        case 1:
+            return "Monday";
+        case 2:
+            return "Tuesday";
+        case 3:
+            return "Wednesday";
+        case 4:
+            return "Thursday";
+        case 5:
+            return "Friday";
+        case 6:
+            return "Saturday";
+        default:
+            return "unknown day of the week";
+    }
 }
 
 
