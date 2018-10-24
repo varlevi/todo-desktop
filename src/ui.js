@@ -135,8 +135,8 @@ function findSection(date) {
 
     let fields = date.split("-");
     let year = fields[0];
-    let month = fields[1];
-    let day = fields[2];
+    let month = util.stripLeadingZeroes(fields[1]);
+    let day = util.stripLeadingZeroes(fields[2]);
     let dayOfWeek = util.indexToDayOfWeek(new Date(date).getUTCDay());
 
     let dateHumanReadable;

@@ -35,6 +35,21 @@ describe("padLeft", function () {
 });
 
 
+describe("stripLeadingZeroes", function () {
+    it("strips a leading zero", function () {
+        assert.strictEqual(util.stripLeadingZeroes("01"), "1");
+    });
+
+    it("strips multiple leading zeroes", function () {
+        assert.strictEqual(util.stripLeadingZeroes("0007"), "7");
+    });
+
+    it("doesn't strip anything else", function () {
+        assert.strictEqual(util.stripLeadingZeroes("10"), "10");
+    });
+});
+
+
 describe("indexToDayOfWeek", function () {
     it("works for Sunday", function () {
         assert.strictEqual(util.indexToDayOfWeek(0), "Sunday");

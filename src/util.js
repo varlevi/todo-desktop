@@ -30,6 +30,14 @@ function padLeft(d) {
 
 
 /**
+ * Remove all '0's from the front of the string.
+ */
+function stripLeadingZeroes(d) {
+    return d.replace(/^0*/, "");
+}
+
+
+/**
  * Given an index 0-6, return the corresponding day of the week.
  */
 function indexToDayOfWeek(index) {
@@ -56,4 +64,5 @@ function indexToDayOfWeek(index) {
 
 exports.getDateFromHeader = getDateFromHeader;
 exports.padLeft = padLeft;
+exports.stripLeadingZeroes = stripLeadingZeroes;
 exports.indexToDayOfWeek = indexToDayOfWeek;
