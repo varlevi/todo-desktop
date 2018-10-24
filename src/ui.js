@@ -14,8 +14,6 @@
  * TODO: Undo for section deletion
  */
 
-"use strict";
-
 const fs = require("fs");
 const path = require("path");
 
@@ -23,46 +21,7 @@ const prompt = require("electron-prompt");
 const toml = require("toml-js");
 
 const serde = require("./src/serde.js");
-
-
-setDatePickerDefault();
-
-
-// Initialize with fallback value.
-let save_file = "todo.txt";
-
-// Try to load the path of the to-do file from a config file.
-const config_path = path.join(process.env.HOME, ".todo-iafisher");
-fs.readFile(config_path, "utf8", (err, data) => {
-    if (err) {
-        const label = (
-            "Enter the path where you want your to-do list to be saved. " +
-            "Choose a folder synced by Dropbox or some other cloud service " +
-            "in order to access the same list on Android."
-        );
-        prompt({
-            title: "Enter to-do list path",
-            label: label,
-        }).then((value) => {
-            if (value !== null) {
-                save_file = value;
-            }
-
-            const data = toml.dump({ path: save_file });
-            fs.writeFile(config_path, data, (err) => {
-                if (err) {
-                    console.error("Unable to save config file");
-                }
-            });
-
-            loadAndRender();
-        });
-    } else {
-        let parsed = toml.parse(data);
-        save_file = parsed.path;
-        loadAndRender();
-    }
-});
+const util = require("./src/util.js");
 
 
 function loadAndRender() {
@@ -169,34 +128,25 @@ function findSection(date) {
 
     for (let section of root.querySelectorAll("div.section")) {
         let title = section.children[0].childNodes[0].textContent;
-        if (getDateFromHeader(title) === date) {
+        if (util.getDateFromHeader(title) === date) {
             return section;
         }
     }
 
     let fields = date.split("-");
+    let year = fields[0];
     let month = fields[1];
     let day = fields[2];
-    let dayOfWeek = indexToDayOfWeek(new Date(date).getUTCDay());
-    return createSection(dayOfWeek + ", " + month + "/" + day);
-}
+    let dayOfWeek = util.indexToDayOfWeek(new Date(date).getUTCDay());
 
+    let dateHumanReadable;
+    if (year == new Date().getFullYear()) {
+        dateHumanReadable = dayOfWeek + ", " + month + "/" + day;
+    } else {
+        dateHumanReadable = dayOfWeek + ", " + month + "/" + day + "/" + year;
+    }
 
-/**
- * From a section header, extract the date.
- */
-function getDateFromHeader(header) {
-    let fields = header.split(" ");
-    let date = fields[fields.length-1];
-
-    let dateFields = date.split("/");
-    let month = parseInt(dateFields[0]);
-    let day = parseInt(dateFields[1]);
-    // TODO: This might break around the New Year.
-    // TODO: Should I be using getUTCFullYear() instead?
-    let year = new Date().getFullYear();
-
-    return year + "-" + padLeft(month) + "-" + padLeft(day);
+    return createSection(dateHumanReadable);
 }
 
 
@@ -208,11 +158,11 @@ function createSection(title) {
     let root = document.getElementById("container");
 
     let sectionToInsert = renderSection(title);
-    let date = getDateFromHeader(title);
+    let date = util.getDateFromHeader(title);
     let inserted = false;
     for (let section of root.querySelectorAll("div.section")) {
         let title = section.children[0].childNodes[0].textContent;
-        if (date < getDateFromHeader(title)) {
+        if (date < util.getDateFromHeader(title)) {
             root.insertBefore(sectionToInsert, section);
             root.insertBefore(document.createElement("hr"), section);
             inserted = true;
@@ -316,41 +266,48 @@ function setDatePickerDefault() {
     const yyyy = tomorrow.getFullYear();
     const mm = tomorrow.getMonth() + 1;
     const dd = tomorrow.getDate();
-    datePicker.value = yyyy + "-" + padLeft(mm) + "-" + padLeft(dd);
+    datePicker.value = yyyy + "-" + util.padLeft(mm) + "-" + util.padLeft(dd);
 }
 
 
-/**
- * If the given positive integer is less than 10, prepend a '0'.
- */
-function padLeft(d) {
-    return (d < 10) ? "0" + d : "" + d;
-}
+setDatePickerDefault();
 
 
-/**
- * Given an index 0-6, return the corresponding day of the week.
- */
-function indexToDayOfWeek(index) {
-    switch (index) {
-        case 0:
-            return "Sunday";
-        case 1:
-            return "Monday";
-        case 2:
-            return "Tuesday";
-        case 3:
-            return "Wednesday";
-        case 4:
-            return "Thursday";
-        case 5:
-            return "Friday";
-        case 6:
-            return "Saturday";
-        default:
-            return "unknown day of the week";
+// Initialize with fallback value.
+let save_file = "todo.txt";
+
+// Try to load the path of the to-do file from a config file.
+const config_path = path.join(process.env.HOME, ".todo-iafisher");
+fs.readFile(config_path, "utf8", (err, data) => {
+    if (err) {
+        const label = (
+            "Enter the path where you want your to-do list to be saved. " +
+            "Choose a folder synced by Dropbox or some other cloud service " +
+            "in order to access the same list on Android."
+        );
+        prompt({
+            title: "Enter to-do list path",
+            label: label,
+        }).then((value) => {
+            if (value !== null) {
+                save_file = value;
+            }
+
+            const data = toml.dump({ path: save_file });
+            fs.writeFile(config_path, data, (err) => {
+                if (err) {
+                    console.error("Unable to save config file");
+                }
+            });
+
+            loadAndRender();
+        });
+    } else {
+        let parsed = toml.parse(data);
+        save_file = parsed.path;
+        loadAndRender();
     }
-}
+});
 
 
 let addButton = document.getElementById("new-item-btn");
