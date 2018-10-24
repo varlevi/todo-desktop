@@ -11,4 +11,4 @@ $ npm install
 $ npm start
 ```
 
-[Android app]: https://github.com/iafisher/todo-android.
+[Android app]: https://github.com/iafisher/todo-android
