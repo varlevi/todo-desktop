@@ -1,17 +1,16 @@
 /**
  * The JavaScript code for the TO-DO app. It handles the following operations:
  *
- *   - Rendering the UI from a JSON list.
- *   - Renaming and deleting sections.
- *   - Editing and deleting items.
+ *   - Rendering the UI from a file on disk.
  *   - Adding new items.
- *   - Creating new sections.
+ *   - Editing and deleting items.
+ *   - Saving changes to disl.
  *
  *
  * Author:  Ian Fisher (iafisher@protonmail.com)
  * Version: October 2018
  *
- * TODO: Undo for section deletion
+ * TODO: Undo for item deletion
  */
 
 const fs = require("fs");
