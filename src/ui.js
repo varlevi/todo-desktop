@@ -1,5 +1,6 @@
 /**
- * The JavaScript code for the TO-DO app. It handles the following operations:
+ * The logic for the user interface of the TO-DO application, handling the
+ * following operations:
  *
  *   - Rendering the UI from a file on disk.
  *   - Adding new items.
@@ -19,19 +20,8 @@ const path = require("path");
 const prompt = require("electron-prompt");
 const toml = require("toml-js");
 
-const serde = require("./src/serde.js");
+const state = require("./src/state.js");
 const util = require("./src/util.js");
-
-
-function loadAndRender() {
-    fs.readFile(save_file, "utf8", (err, data) => {
-        if (err) {
-            render([]);
-        } else {
-            render(serde.deserialize(data));
-        }
-    });
-}
 
 
 function renderError(msg) {
@@ -59,45 +49,6 @@ function render(data) {
 }
 
 
-function saveState() {
-    if (process.env.DEBUG) {
-        return;
-    }
-
-    let root = document.getElementById("container");
-    let data = [];
-    for (let child of root.children) {
-        if (child.classList.contains("section")) {
-            data.push(serializeSection(child));
-        }
-    }
-    fs.writeFile(save_file, serde.serialize(data), (err) => {
-        if (err) {
-            console.error("Unable to save file");
-        }
-    });
-}
-
-
-function serializeSection(section) {
-    let title = section.children[0].childNodes[0].textContent.trim();
-    let items = [];
-    for (let child of section.children) {
-        if (child.classList.contains("todo") || child.classList.contains("todo-done")) {
-            items.push(serializeItem(child));
-        }
-    }
-    return { title: title, items: items };
-}
-
-
-function serializeItem(item) {
-    let text = item.childNodes[1].textContent.trim();
-    let finished = item.classList.contains("todo-done");
-    return { text: text, finished: finished };
-}
-
-
 function checkOrUncheckHandler(event) {
     let parentNode = event.target.parentNode;
     if (parentNode.classList.contains("todo")) {
@@ -105,7 +56,8 @@ function checkOrUncheckHandler(event) {
     } else {
         parentNode.classList.replace("todo-done", "todo");
     }
-    saveState();
+
+    state.save(saveFile);
 }
 
 
@@ -145,7 +97,7 @@ function findSection(date) {
     }
 
     let newSection = createSection(dateHumanReadable);
-    saveState();
+    state.save(saveFile);
     return newSection;
 }
 
@@ -220,7 +172,7 @@ function renderItem(text, finished) {
         }).then((value) => {
             if (value !== null) {
                 parentNode.childNodes[1].textContent = " " + value + " ";
-                saveState();
+                state.save(saveFile);
             }
         });
     });
@@ -240,7 +192,7 @@ function renderItem(text, finished) {
             section.remove();
         }
 
-        saveState();
+        state.save(saveFile);
     });
 
     newItem.appendChild(check);
@@ -272,7 +224,7 @@ setDatePickerDefault();
 
 
 // Initialize with fallback value.
-let save_file = "todo.txt";
+let saveFile = "todo.txt";
 
 // Try to load the path of the to-do file from a config file.
 const config_path = path.join(process.env.HOME, ".todo-iafisher");
@@ -288,22 +240,22 @@ fs.readFile(config_path, "utf8", (err, data) => {
             label: label,
         }).then((value) => {
             if (value !== null) {
-                save_file = value;
+                saveFile = value;
             }
 
-            const data = toml.dump({ path: save_file });
+            const data = toml.dump({ path: saveFile });
             fs.writeFile(config_path, data, (err) => {
                 if (err) {
                     console.error("Unable to save config file");
                 }
             });
 
-            loadAndRender();
+            state.load(saveFile, render);
         });
     } else {
         let parsed = toml.parse(data);
-        save_file = parsed.path;
-        loadAndRender();
+        saveFile = parsed.path;
+        state.load(saveFile, render);
     }
 });
 
@@ -317,7 +269,7 @@ addButton.addEventListener("click", event => {
     if (text.length > 0) {
         let section = findSection(date);
         addItem(section, text, false);
-        saveState();
+        state.save(saveFile);
         textInput.value = "";
     }
 });
