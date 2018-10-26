@@ -114,7 +114,6 @@ function checkOrUncheckHandler(event) {
  */
 function addItem(section, text, finished) {
     section.appendChild(renderItem(text, finished));
-    saveState();
 }
 
 
@@ -145,7 +144,9 @@ function findSection(date) {
         dateHumanReadable = dayOfWeek + ", " + month + "/" + day + "/" + year;
     }
 
-    return createSection(dateHumanReadable);
+    let newSection = createSection(dateHumanReadable);
+    saveState();
+    return newSection;
 }
 
 
@@ -173,8 +174,6 @@ function createSection(title) {
         root.appendChild(sectionToInsert);
         root.appendChild(document.createElement("hr"));
     }
-
-    saveState();
 
     return sectionToInsert;
 }
@@ -318,6 +317,7 @@ addButton.addEventListener("click", event => {
     if (text.length > 0) {
         let section = findSection(date);
         addItem(section, text, false);
+        saveState();
         textInput.value = "";
     }
 });
