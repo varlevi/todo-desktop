@@ -220,6 +220,14 @@ function setDatePickerDefault() {
 }
 
 
+/**
+ * Initialize the date-specific radio buttons.
+ */
+function initializeRadioButtons() {
+}
+
+
+/// THE INITIALIZATION SCRIPT \\\
 setDatePickerDefault();
 
 

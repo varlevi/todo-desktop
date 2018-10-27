@@ -124,3 +124,14 @@ input {
   text-shadow: none;
   box-shadow: 0 1px 1px rgba(0, 0, 0, .3) inset;
 }
+
+.radio-row {
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+input[type=radio] {
+  margin-left: 5px;
+}
