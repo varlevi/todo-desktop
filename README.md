@@ -5,7 +5,7 @@ the file in Dropbox. Works with the [Android app]
 
 To run:
 ```
-$ git clone https://github.com/iafisher/todo-desktop.git
+$ git clone https://github.com/varlevi/todo-desktop.git
 $ cd todo-desktop
 $ npm install
 $ npm start

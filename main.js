@@ -1,5 +1,5 @@
 /**
- * The Electron code for the TO-DO app. See `todo.js` for the app's main
+ * The Electron code for the TO-DO app. See `ui.js` for the app's main
  * functionality.
  *
  * Author:  Ian Fisher (iafisher@protonmail.com)
@@ -31,7 +31,7 @@ app.on("ready", createWindow);
 
 // These functions are from the tutorial:
 //   https://electronjs.org/docs/tutorial/first-app
-// They make the application behavior properly on macOS.
+// They make the application behave properly on macOS.
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit()

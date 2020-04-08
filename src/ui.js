@@ -124,7 +124,6 @@ function createSection(title) {
 
     if (!inserted) {
         root.appendChild(sectionToInsert);
-        root.appendChild(document.createElement("hr"));
     }
 
     return sectionToInsert;
